@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useCallback } from 'react';
 import Header from './components/Header';
 import Footer from './components/Footer';
@@ -33,7 +34,7 @@ const SupabaseNotConfigured: React.FC = () => (
 
 const AppContainer: React.FC<{ session: Session | null }> = ({ session }) => {
   const [theme, setTheme] = useLocalStorage<'light' | 'dark'>('theme', 'dark');
-  const [language, setLanguage] = useLocalStorage<keyof typeof translations>('language', 'en');
+  const [language, setLanguage] = useLocalStorage<keyof typeof translations>('language', 'vi');
   
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [isAccountModalOpen, setIsAccountModalOpen] = useState(false);

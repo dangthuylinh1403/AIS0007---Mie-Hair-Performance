@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { useSettings } from '../context/SettingsContext';
 import { ChevronDownIcon } from './Icons';
@@ -119,8 +120,8 @@ export const SummaryHeader: React.FC<SummaryHeaderProps> = ({ onRangeUpdate, onC
     return (
         <div className="mb-4">
             <h2 className="text-xl font-bold mb-3 text-gray-700 dark:text-gray-300">{title}</h2>
-            <div className="flex flex-wrap items-center justify-between gap-2 p-2 bg-gray-100 dark:bg-gray-800 rounded-lg">
-                <div className="flex items-center gap-2">
+            <div className="grid grid-cols-1 md:grid-cols-3 items-center gap-2 p-2 bg-gray-100 dark:bg-gray-800 rounded-lg">
+                <div className="flex items-center gap-2 md:col-start-2 justify-self-center">
                     <div className="relative">
                         <label htmlFor="year-select" className="sr-only">{t.year}</label>
                         <select
@@ -144,7 +145,7 @@ export const SummaryHeader: React.FC<SummaryHeaderProps> = ({ onRangeUpdate, onC
                         </select>
                     </div>
                 </div>
-                <div className="relative" ref={dropdownRef}>
+                <div className="relative md:col-start-3 justify-self-center md:justify-self-end" ref={dropdownRef}>
                     <button onClick={() => setIsDropdownOpen(o => !o)} className="flex items-center gap-2 px-3 py-1.5 text-sm font-semibold bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm">
                         <span>{label}</span>
                         <ChevronDownIcon size={16} />

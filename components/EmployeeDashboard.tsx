@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { useSettings } from '../context/SettingsContext';
 import { supabase } from '../lib/supabase';
@@ -310,14 +311,14 @@ const CalendarHeader: React.FC<{ currentDate: Date; onPrevMonth: () => void; onN
     const monthYear = new Intl.DateTimeFormat(language, { year: 'numeric', month: 'long', timeZone: 'Asia/Ho_Chi_Minh' }).format(currentDate);
 
     return (
-        <div className="flex justify-between items-center mb-4 px-2">
-            <h2 className="text-xl font-bold text-gray-800 dark:text-gray-200">{t.dashboardTitle}</h2>
-            <div className="flex items-center gap-4">
+        <div className="grid grid-cols-3 items-center mb-4 px-2">
+            <h2 className="text-xl font-bold text-gray-800 dark:text-gray-200 justify-self-start">{t.dashboardTitle}</h2>
+            <div className="flex items-center gap-4 justify-self-center">
                 <button onClick={onPrevMonth} className="p-1.5 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"><ChevronLeftIcon/></button>
-                <h3 className="text-lg font-bold text-center w-36">{monthYear}</h3>
+                <h3 className="text-lg font-bold text-center whitespace-nowrap">{monthYear}</h3>
                 <button onClick={onNextMonth} className="p-1.5 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"><ChevronRightIcon/></button>
             </div>
-            <button onClick={onSetToday} className="px-3 py-1 text-sm font-semibold rounded-full border border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">{t.today}</button>
+            <button onClick={onSetToday} className="px-3 py-1 text-sm font-semibold rounded-full border border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors justify-self-end">{t.today}</button>
         </div>
     );
 };

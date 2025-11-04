@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { supabase } from '../lib/supabase';
 import { XIcon, UserIcon } from './Icons';
@@ -16,6 +17,7 @@ const AccountModal: React.FC<AccountModalProps> = ({ isOpen, onClose, session })
     
     const [profileLoading, setProfileLoading] = useState(true);
     const [fullName, setFullName] = useState('');
+    const [email, setEmail] = useState('');
     const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
     const [avatarFile, setAvatarFile] = useState<File | null>(null);
     const [uploading, setUploading] = useState(false);
@@ -61,6 +63,7 @@ const AccountModal: React.FC<AccountModalProps> = ({ isOpen, onClose, session })
     useEffect(() => {
         if (isOpen && session) {
             getProfile();
+            setEmail(session.user.email || '');
             setActiveTab('profile');
             setPassword('');
             setConfirmPassword('');
@@ -107,10 +110,24 @@ const AccountModal: React.FC<AccountModalProps> = ({ isOpen, onClose, session })
             const { error: profileError } = await supabase.from('profiles').upsert(updates);
             if (profileError) throw profileError;
             
-            // Also update auth user metadata for consistency in the app
-            await supabase.auth.updateUser({ data: { full_name: fullName, avatar_url: newAvatarUrl } });
+            const emailChanged = email && email !== session.user.email;
+
+            const authUserUpdates: any = { 
+                data: { full_name: fullName, avatar_url: newAvatarUrl } 
+            };
+            if (emailChanged) {
+                authUserUpdates.email = email;
+            }
+
+            const { error: authError } = await supabase.auth.updateUser(authUserUpdates);
+            if (authError) throw authError;
+
+            if(emailChanged) {
+                setProfileMessage({ text: "Profile updated. Check both email inboxes to confirm the change.", type: 'success' });
+            } else {
+                setProfileMessage({ text: t.profileUpdated, type: 'success' });
+            }
             
-            setProfileMessage({ text: t.profileUpdated, type: 'success' });
             setAvatarFile(null);
         } catch (error: any) {
             console.error("Error updating profile:", error.message);
@@ -199,6 +216,10 @@ const AccountModal: React.FC<AccountModalProps> = ({ isOpen, onClose, session })
                                     <div>
                                         <label htmlFor="fullName" className="block text-sm font-medium text-gray-700 dark:text-gray-300">{t.fullName}</label>
                                         <input type="text" id="fullName" value={fullName} onChange={e => setFullName(e.target.value)} className="mt-1 block w-full px-3 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-[var(--accent-color)] focus:border-[var(--accent-color)] sm:text-sm" />
+                                    </div>
+                                    <div>
+                                        <label htmlFor="email" className="block text-sm font-medium text-gray-700 dark:text-gray-300">{t.emailLabel}</label>
+                                        <input type="email" id="email" value={email} onChange={e => setEmail(e.target.value)} required className="mt-1 block w-full px-3 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-[var(--accent-color)] focus:border-[var(--accent-color)] sm:text-sm" />
                                     </div>
                                 </div>
                                 )}
